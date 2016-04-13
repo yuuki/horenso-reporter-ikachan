@@ -6,7 +6,17 @@ horenso-reporter-ikachan
 ## Usage
 
 ```
-horenso-reporter-ikachan -c/--channel CHANNEL [-t/--type notice|privmsg] [-T/--tag TAG] [-e/--error-only]
+horenso-reporter-ikachan --host HOSTNAME --channel '#CHANNEL' [--port=PORT] [--type=MSGTYPE] [--error-only]
+
+Application Options:
+  -H, --host=hostname         ikachan hostname
+  -p, --port=port             ikachan port (4979)
+  -c, --channel='#channel'    destination channel
+  -t, --type=msgtype          message type notice/privmsg) (notice)
+  -e, --error-only            report only when error ocurrs (false)
+
+Help Options:
+  -h, --help                  Show this help message
 ```
 
 ```
