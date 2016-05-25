@@ -30,31 +30,7 @@ type ikachanOpts struct {
 	MsgType string
 }
 
-func parseArgs(args []string) (*flags.Parser, *opts, error) {
-	o := &opts{}
-	p := flags.NewParser(o, flags.Default)
-	p.Usage = "--host HOSTNAME --channel '#CHANNEL' [--port=PORT] [--type=MSGTYPE] [--error-only] \n\nVerion: " + version
-	_, err := p.ParseArgs(args)
-	return p, o, err
-}
-
-func Run(args []string) int {
-	p, o, err := parseArgs(args)
-	if err != nil {
-		if ferr, ok := err.(*flags.Error); !ok || ferr.Type != flags.ErrHelp {
-			p.WriteHelp(os.Stderr)
-		}
-		return 2
-	}
-
-	if err := o.run(args); err != nil {
-		fmt.Fprintf(os.Stderr, "%s", err)
-		return 1
-	}
-	return 0
-}
-
-func (o *opts) run(args []string) error {
+func run(o *opts) error {
 	r, err := horensoreporter.GetReport()
 	if err != nil {
 		return fmt.Errorf("Failed to get report from horenso: %s", err)
@@ -101,5 +77,21 @@ func postToIkachan(o *ikachanOpts) error {
 }
 
 func main() {
-	os.Exit(Run(os.Args[1:]))
+	opt := &opts{}
+	p := flags.NewParser(opt, flags.Default)
+	p.Usage = "--host HOSTNAME --channel '#CHANNEL' [--port=PORT] [--type=MSGTYPE] [--error-only] \n\nVerion: " + version
+	_, err := p.ParseArgs(os.Args)
+	if err != nil {
+		if ferr, ok := err.(*flags.Error); !ok || ferr.Type != flags.ErrHelp {
+			p.WriteHelp(os.Stderr)
+		}
+		os.Exit(2)
+	}
+
+	if err := run(opt); err != nil {
+		fmt.Fprintf(os.Stderr, "%s", err)
+		os.Exit(1)
+	}
+
+	os.Exit(0)
 }
