@@ -56,7 +56,7 @@ func run(o *opts) error {
 }
 
 func formatMessage(r *horenso.Report) string {
-	msg := fmt.Sprintf("command:%s hostname:%s systime:%f usertime:%f output:%s result:%s", r.Command, r.Hostname, r.SystemTime, r.UserTime, r.Output, r.Result)
+	msg := fmt.Sprintf("command:%s hostname:%s systime:%f usertime:%f output:%s result:%s", r.Command, r.Hostname, *r.SystemTime, *r.UserTime, r.Output, r.Result)
 	if r.Tag != "" {
 		return fmt.Sprintf("tag:%s %s", msg)
 	}
